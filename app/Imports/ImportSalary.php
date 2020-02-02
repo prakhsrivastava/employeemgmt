@@ -14,6 +14,8 @@ use Maatwebsite\Excel\Concerns\SkipsFailures;
 use Maatwebsite\Excel\Concerns\SkipsErrors;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Concerns\Importable;
+use Maatwebsite\Excel\Concerns\ToCollection;
+use Illuminate\Support\Collection;
 use Illuminate\Validation\Rule;
 
 class ImportSalary implements ToModel, 
@@ -21,11 +23,14 @@ class ImportSalary implements ToModel,
     WithCalculatedFormulas,
     SkipsOnFailure,
     WithValidation,
-    SkipsOnError
+    SkipsOnError,
+    ToCollection
 {
     use SkipsFailures;
     use SkipsErrors;
     use Importable;
+
+    private $rows = 0;
 
     /**
      * @param array $row
@@ -60,7 +65,8 @@ class ImportSalary implements ToModel,
         ])->toArray();
         $row['employee_name'] = $row['teacheremployees_name_designation'];
         unset($row['teacheremployees_name_designation']);
-
+        
+        ++$this->rows;
         return new Employee($row);
     }
 
@@ -70,5 +76,15 @@ class ImportSalary implements ToModel,
             'sr_no' => 'required|integer',
             'teacheremployees_name_designation' => 'required|unique:employees,employee_name|max:255',
         ];
+    }
+
+    public function collection(Collection $rows)
+    {
+        return $rows;
+    }
+
+    public function getRowCount(): int
+    {
+        return $this->rows;
     }
 }

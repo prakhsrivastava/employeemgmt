@@ -42,8 +42,10 @@ class EmployeeContoller extends Controller
     public function import(Request $req) {
         $import = new \App\Imports\ImportEmployee();
         $import->onlySheets('salary');
+        $count = 0;
         try {
             $imports = Excel::import($import, request()->file('xl_file'));
+            $count = $import->getSalaryRowCount();
         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
             // pr($e->errors());
             // pr($e->failures());
@@ -54,7 +56,7 @@ class EmployeeContoller extends Controller
                 $failure->values(); // The values of the row that has failed.
             }
         }
-        return redirect()->route('emp.index');
+        return redirect()->route('emp.index')->with('success', $count.' Records Added');
     }
 
 }

@@ -13,15 +13,34 @@
                         </div>
                     @endif
                     <div class="row">
-                        <div class="col-sm-12 text-right">
-                            <form method="post" id="import_xls" action="{{ route('emp.import') }}" enctype="multipart/form-data">
-                                @csrf
-                                <div class="form-group">
-                                    <input type="file" name="xl_file" class="form-control"/>
+                        <form method="post" id="import_xls" action="{{ route('emp.import') }}" enctype="multipart/form-data" class="col-sm-12">
+                            @csrf
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Excel</label>
+                                        <input type="file" name="xl_file" class="form-control"/>
+                                    </div>                                    
                                 </div>
-                                <button type="button" id="import" class="btn btn-primary btn-sm">Import</button>
-                            </form>
-                        </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Month</label>
+                                        <div class="input-group">
+                                            <input id="month" type="text" class="date-time-picker form-control date" name="month" data-options='{"timepicker":false, "format":"Y-m-d"}' autocomplete="off" readonly>
+                                            <span class="input-group-append">
+                                                <span class="input-group-text add-on white">
+                                                <i class="icon-calendar"></i>
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label>&nbsp;</label>
+                                    <button type="button" id="import" class="btn btn-primary btn-sm btn-block">Import</button>
+                                </div>
+                            </div>                                
+                        </form>
                     </div>
                     <br/>
                     <div class="row">
@@ -64,10 +83,19 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $(document).on('click', '#import', function () {
-            if ($('[name="xl_file"]').val()) {
-                $('#import_xls').submit();
-            } else {
+            var flag = 1;
+            if (!$('[name="xl_file"]').val()) {
+                flag = 0;
                 alert('Please select the excel to import.');
+            }
+
+            if (!$('[name="month"]').val()) {
+                flag = 0;
+                alert('Please select the month to import.');
+            }
+
+            if (flag) {
+                $('#import_xls').submit();
             }
         });
     });

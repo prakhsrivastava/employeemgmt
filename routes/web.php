@@ -17,7 +17,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::group(['prefix' => 'employee', 'as' => 'emp.'], function () {
+Route::group(['prefix' => 'employee', 'as' => 'emp.', 'middleware' => ['auth']], function () {
     Route::get('', 'EmployeeContoller@index')->name('index');
     Route::post('/import', 'EmployeeContoller@import')->name('import');
 });
