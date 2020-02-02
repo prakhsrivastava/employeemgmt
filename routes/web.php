@@ -25,4 +25,6 @@ Route::group(['prefix' => 'employee', 'as' => 'emp.'], function () {
 // Employee Route
 // Route::resource('/employee', 'EmployeeContoller');
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', function () {
+    return redirect()->route('emp.index');
+})->name('home');

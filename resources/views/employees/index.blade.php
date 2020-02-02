@@ -29,15 +29,29 @@
                             <table class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th>Actions</th>
+                                        <th class="text-center">Actions</th>
                                         <th>S. No.</th>
                                         <th>Name</th>
-                                        <th>Status</th>
+                                        <th>Pay Band / Level</th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @foreach ($employees as $employee)   
+                                    <tr>
+                                        <td class="text-center">
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-sm btn-warning">Report</button>
+                                                <button type="button" class="btn btn-sm btn-success">Edit</button>
+                                            </div>
+                                        </td>
+                                        <td>{{ $employee->id }}</td>
+                                        <td>{{ $employee->employee_name }}</td>
+                                        <td>{{ $employee->pay_band_level }}</td>
+                                    </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
+                            {{ $employees->links() }}
                         </div>
                     </div>
                 </div>
