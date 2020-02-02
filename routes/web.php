@@ -17,4 +17,12 @@ Route::get('/', function () {
 
 Auth::routes();
 
+Route::group(['prefix' => 'employee', 'as' => 'emp.'], function () {
+    Route::get('', 'EmployeeContoller@index')->name('index');
+    Route::post('/import', 'EmployeeContoller@import')->name('import');
+});
+
+// Employee Route
+// Route::resource('/employee', 'EmployeeContoller');
+
 Route::get('/home', 'HomeController@index')->name('home');
