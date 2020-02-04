@@ -10,19 +10,22 @@ class ImportEmployee implements WithMultipleSheets
 {
     use WithConditionalSheets;
 
-    private $salarySheet;
+    private ImportSalary $salarySheet;
+
+    public function __construct($month, $year) 
+    {
+        $this->salarySheet = new ImportSalary($month, $year);
+    }
 
     public function sheets(): array
     {
-        $this->salarySheet = new ImportSalary();
         return [
             'salary' => $this->salarySheet
         ];
     }
 
     public function conditionalSheets(): array
-    {
-        $this->salarySheet = new ImportSalary();
+    {        
         return [
             'salary' => $this->salarySheet,
         ];

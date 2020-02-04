@@ -26,7 +26,7 @@
                                     <div class="form-group">
                                         <label>Month</label>
                                         <div class="input-group">
-                                            <input id="month" type="text" class="date-time-picker form-control date" name="month" data-options='{"timepicker":false, "format":"Y-m-d"}' autocomplete="off" readonly>
+                                            <input id="month" type="text" class="date-time-picker form-control date" name="month" data-options='{"timepicker":false, "format":"m/Y"}' autocomplete="off" readonly>
                                             <span class="input-group-append">
                                                 <span class="input-group-text add-on white">
                                                 <i class="icon-calendar"></i>

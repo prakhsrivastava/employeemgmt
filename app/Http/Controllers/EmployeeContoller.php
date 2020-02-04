@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Excel;
+use Carbon\Carbon;
 
 class EmployeeContoller extends Controller
 {
@@ -46,9 +47,12 @@ class EmployeeContoller extends Controller
         return redirect(route('employee.index'));
     }
 
-    public function import(Request $req) {
-        $import = new \App\Imports\ImportEmployee();
+    public function import(Request $req) 
+    {
+        $date = Carbon::createFromFormat('m/Y', $req->month);
+        $import = new \App\Imports\ImportEmployee($date->format('m'), $date->format('Y'));
         $import->onlySheets('salary');
+
         $count = 0;
         try {
             $imports = Excel::import($import, request()->file('xl_file'));

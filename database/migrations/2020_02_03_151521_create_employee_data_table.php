@@ -16,6 +16,8 @@ class CreateEmployeeDataTable extends Migration
         Schema::create('employee_data', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('employee_id');
+            $table->integer('month');
+            $table->integer('year');
             $table->foreign('employee_id')->references('id')->on('employees');
             $table->string('dob')->nullable();
             $table->string('date_of_apptt')->nullable();

@@ -8,7 +8,7 @@ class EmployeeData extends Model
 {
     protected $table = 'employee_data'; 
 
-    protected $fillables = [
+    protected $fillable = [
         'year',
         'month',
         'dob',

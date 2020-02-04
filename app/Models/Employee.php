@@ -9,16 +9,13 @@ class Employee extends Model
     
     protected $guarded = ['id'];
 
-    protected $fillables = [
+    protected $fillable = [
         'employee_name',
         'pay_band_level',
         'emp_status',
         'status'
     ];
-      
     
-
-
     // Relationship methodes
     public function data()
     {
