@@ -20,6 +20,7 @@ Auth::routes();
 Route::group(['prefix' => 'employee', 'as' => 'emp.', 'middleware' => ['auth']], function () {
     Route::get('', 'EmployeeContoller@index')->name('index');
     Route::post('/import', 'EmployeeContoller@import')->name('import');
+    Route::get('/edit/{id}', 'EmployeeContoller@edit')->name('edit');
 });
 
 // Employee Route

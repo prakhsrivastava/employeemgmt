@@ -8,8 +8,8 @@ class EmployeeContoller extends Controller
 {
     public function index(Request $req)
     {
-        // $page = ($req->page)?$req->page:1;
         $employees = \App\Models\Employee::paginate(10);
+        
         return view('employees.index', compact('employees'));
     }
     
@@ -29,6 +29,13 @@ class EmployeeContoller extends Controller
         // return view('employees.show', compact('data' => $showData));
     }
     
+    public function edit($id)
+    {
+        $empData = \App\Models\Employee::where('id', $id)->first();
+        // prd($empData->toArray());
+        return view('employees.edit', compact('empData'));
+    }
+
     public function update(Request $req, $id)
     {
         return redirect(route('employee.index'));
