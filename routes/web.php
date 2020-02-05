@@ -15,9 +15,9 @@ Route::get('/', function () {
     return redirect()->to('/login');
 });
 
-Auth::routes();
+Auth::routes(['register' => false]);
 
-Route::group(['prefix' => 'employee', 'as' => 'emp.'], function () {
+Route::group(['prefix' => 'employee', 'as' => 'emp.', 'middleware' => 'auth'], function () {
     Route::get('', 'EmployeeContoller@index')->name('index');
     Route::post('/import', 'EmployeeContoller@import')->name('import');
 });
