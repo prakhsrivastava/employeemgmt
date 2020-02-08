@@ -14,7 +14,7 @@
                     @endif
                     <div class="row">
                         <form method="post" id="import_xls" action="{{ route('emp.import') }}" enctype="multipart/form-data" class="col-sm-12">
-                            @csrf
+                            {{ csrf_field() }}
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
@@ -42,16 +42,23 @@
                             </div>                                
                         </form>
                     </div>
+                    <div class="row text-center"> 
+                        <div class="col-sm-12">
+                            <button type="button" id="report" class="btn btn-success btn-sm">Tax Report</button>
+                        </div>
+                    </div>
                     <br/>
                     <div class="row">
                         <div class="col-sm-12 table-responsive">
-                            <table class="table table-bordered table-striped">
+                            <table class="table table-bordered table-hover data-tables">
                                 <thead>
                                     <tr>
                                         <th class="text-center">Actions</th>
                                         <th>S. No.</th>
                                         <th>Name</th>
                                         <th>Pay Band / Level</th>
+                                        <th>Working Status</th>
+                                        <th>Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -66,11 +73,12 @@
                                         <td>{{ $employee->id }}</td>
                                         <td>{{ $employee->employee_name }}</td>
                                         <td>{{ $employee->pay_band_level }}</td>
+                                        <td>{{ $employee->emp_status }}</td>
+                                        <td>{{ ($employee->status)?'Active':'Inactive' }}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>
                             </table>
-                            {{ $employees->links() }}
                         </div>
                     </div>
                 </div>

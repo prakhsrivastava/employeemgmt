@@ -8,7 +8,7 @@
                 <div class="card-header">Edit Employee</div>
                 <div class="card-body">
                     <form method="post" action="" enctype="multipart/form-data">
-                        @csrf
+                        {{ csrf_field() }}
                         @if(isset($empData) && $empData->count())
                         <div class="row col-sm-12">
                             <div class="col-sm-4">

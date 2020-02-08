@@ -10,7 +10,7 @@ class ImportEmployee implements WithMultipleSheets
 {
     use WithConditionalSheets;
 
-    private ImportSalary $salarySheet;
+    private $salarySheet;
 
     public function __construct($month, $year) 
     {
