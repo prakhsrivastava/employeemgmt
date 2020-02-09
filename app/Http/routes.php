@@ -23,9 +23,9 @@ Route::get('/logout', function () {
     return redirect()->to('/login');
 })->name('logout');
 
-/* AUTH Registration Routes */
-Route::get('/register', 'Auth\RegisterController@getRegister')->name('register');
-Route::post('/register', 'Auth\RegisterController@postRegister');
+// /* AUTH Registration Routes */
+// Route::get('/register', 'Auth\RegisterController@getRegister')->name('register');
+// Route::post('/register', 'Auth\RegisterController@postRegister');
 
 
 Route::group(['prefix' => 'employee', 'as' => 'emp.', 'middleware' => ['auth']], function () {
