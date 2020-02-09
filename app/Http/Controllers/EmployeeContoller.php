@@ -6,6 +6,7 @@ use App\Models\Employee;
 use Carbon\Carbon;
 use Validator;
 use Excel;
+use DB;
 
 class EmployeeContoller extends Controller
 {
@@ -23,8 +24,7 @@ class EmployeeContoller extends Controller
     
     public function store(Request $req)
     {
-
-        return redirect(route('employee.index'));
+        return redirect(route('emp.index'));
     }
     
     public function show($id)
@@ -41,17 +41,18 @@ class EmployeeContoller extends Controller
 
     public function update(Request $req, $id)
     {
-        return redirect(route('employee.index'));
+        return redirect(route('emp.index'));
     }
     
     public function destroy($id)
     {
-        return redirect(route('employee.index'));
+        Employee::find($id)->delete();
+        return redirect(route('emp.index'));
     }
 
     public function import(Request $req) 
     {
-        $date = Carbon::createFromFormat('m/Y', $req->month);
+        $date = Carbon::createFromFormat('d/m/Y', $req->month);
         $file = request()->file('xl_file');
         $destinationPath = 'uploads';
         $filename = rand().$file->getClientOriginalName();
@@ -65,7 +66,8 @@ class EmployeeContoller extends Controller
             $row = collect($row);
             $validator = Validator::make($row->all(), [
                 'sr_no' => 'required|integer',
-                'teacheremployees_name_designation' => 'required|unique:employees,employee_name|max:255',
+                // 'teacheremployees_name_designation' => 'required|unique:employees,employee_name|max:255',
+                'teacheremployees_name_designation' => 'required|max:255',
             ]);
             
             if ($validator->fails()) {
@@ -100,30 +102,51 @@ class EmployeeContoller extends Controller
                 'total_dedu',
                 'total_payment',
                 'nps_govt_share',
+                'gpf',
+                'gpf_loan',
             ])->toArray();
             $emp_data['month'] = $date->format('m');
             $emp_data['year'] = $date->format('Y');
             
             if (!empty($employee['employee_name'])) {
                 ++$count;
-                $emp = Employee::where('employee_name', $employee['employee_name'])->first();
+                $emp = Employee::where('employee_name', $employee['employee_name'])
+                    ->first();
                 if (empty($emp)) {
                     $emp = Employee::create($employee);
                 } else {
                     $emp->update($employee);
                 }
-
-                $emp_data = $emp->data()->where('month', $date->format('m'))
+                
+                
+                $empdata = $emp->data()->where('month', $date->format('m'))
                     ->where('year', $date->format('Y'))
                     ->first();
-                if (empty($emp_data)) {
+                if (empty($empdata)) {
                     $emp->data()->create($emp_data);
                 } else {
-                    $emp_data->update($emp_data);
+                    $empdata->update($emp_data);
                 }
             }
         }
+        
+        unlink($destinationPath.'/'.$filename);
+        return redirect()->route('emp.index')->with('success', $count.' Records Added/Updated');
+    }
 
-        return redirect()->route('emp.index')->with('success', $count.' Records Added');
+    public function report() 
+    {
+        $tax_report = \App\Models\EmployeeData::select(
+            DB::raw(
+                'sum(hra) as hra, sum(total_salary) as total_salary, sum(lic) as lic, sum(it) as it, sum(gr_ins) as gr_ins, sum(gpf) as gpf, sum(gpf_loan) as gpf_loan, month, year'
+            )                
+        )
+        ->groupBy('month','year')
+        ->get();
+
+        $employees = \App\Models\Employee::with('data')
+        ->get();
+        
+        return view('employees.report', compact('tax_report', 'employees'));
     }
 }

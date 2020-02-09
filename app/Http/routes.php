@@ -31,7 +31,9 @@ Route::post('/register', 'Auth\RegisterController@postRegister');
 Route::group(['prefix' => 'employee', 'as' => 'emp.', 'middleware' => ['auth']], function () {
     Route::get('', 'EmployeeContoller@index')->name('index');
     Route::post('/import', 'EmployeeContoller@import')->name('import');
-    Route::get('/edit/{id}', 'EmployeeContoller@edit')->name('edit');
+    Route::get('/{id}/edit', 'EmployeeContoller@edit')->name('edit');
+    Route::get('/report', 'EmployeeContoller@report')->name('report');
+    Route::post('/{id}/delete', 'EmployeeContoller@destroy')->name('delete');
 });
 
 // Employee Route
