@@ -33,7 +33,7 @@ Route::group(['prefix' => 'employee', 'as' => 'emp.', 'middleware' => ['auth']],
     Route::post('/import', 'EmployeeContoller@import')->name('import');
     Route::get('/{id}/edit', 'EmployeeContoller@edit')->name('edit');
     Route::get('/report', 'EmployeeContoller@report')->name('report');
-    Route::post('/edit', 'EmployeeContoller@getData');
+    Route::post('/getData', 'EmployeeContoller@getData')->name('getData');
     Route::post('/{id}/delete', 'EmployeeContoller@destroy')->name('delete');
 });
 

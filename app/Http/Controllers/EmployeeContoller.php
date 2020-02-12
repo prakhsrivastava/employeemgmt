@@ -41,7 +41,7 @@ class EmployeeContoller extends Controller
 
     public function getData(Request $req)
     {
-        $empData = \App\Models\EmployeeData::where(['id' => $req->id, 'month' => $req->month, 'year' => $req->year])->first();
+        $empData = \App\Models\EmployeeData::where(['id' => $req->id])->first();
         
         return view('employees.edit_model', compact('empData'));
     }
