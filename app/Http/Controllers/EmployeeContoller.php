@@ -34,14 +34,23 @@ class EmployeeContoller extends Controller
     
     public function edit($id)
     {
-        $empData = \App\Models\Employee::where('id', $id)->first();
-        // prd($empData->toArray());
+        $empData = \App\Models\Employee::where('id', $id)->with('data')->first();
+        // print "<pre>";print_r($empData->toArray());die;
         return view('employees.edit', compact('empData'));
+    }
+
+    public function getData(Request $req)
+    {
+        $empData = \App\Models\EmployeeData::where(['id' => $req->id, 'month' => $req->month, 'year' => $req->year])->first();
+        
+        return view('employees.edit_model', compact('empData'));
     }
 
     public function update(Request $req, $id)
     {
-        return redirect(route('employee.index'));
+        $postData = $req->except('_token');
+        $empData = \App\Models\EmployeeData::where('id', $id)->update($postData);
+        return redirect()->back();
     }
     
     public function destroy($id)

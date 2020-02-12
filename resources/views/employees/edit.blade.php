@@ -10,176 +10,161 @@
                     <form method="post" action="" enctype="multipart/form-data">
                         {{ csrf_field() }}
                         @if(isset($empData) && $empData->count())
-                        <div class="row col-sm-12">
-                            <div class="col-sm-4">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label>EMPLOYEE'S NAME</label>
                                 <div class="form-group">
-                                    <label>TEACHER/EMPLOYEE'S NAME & DESIGNATION</label>
                                     <input class="form-control" type="text" id="employee_name" name="employee_name" value="{{ $empData['employee_name'] }}" />
                                 </div>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-6">
+                                <label>PAY BAND / LEVEL</label>
                                 <div class="form-group">
-                                    <label>D.O.B</label>
-                                    <input class="form-control" type="text" id="dob" name="dob" value="{{ $empData['dob'] }}" />
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label>DATE OF APPTT.</label>
-                                    <input class="form-control" type="text" id="date_of_apptt" name="date_of_apptt" value="{{ $empData['date_of_apptt'] }}" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row col-sm-12">                             
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label>DATE OF INCR.</label>
-                                    <input class="form-control" type="text" id="date_of_incr" name="date_of_incr" value="{{ $empData['date_of_incr'] }}" />
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label>PAY BAND / LEVEL</label>
                                     <input class="form-control" type="text" id="pay_band_level" name="pay_band_level" value="{{ $empData['pay_band_level'] }}" />
                                 </div>
                             </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label>EMPLOYEE STATUS</label>
+                                <div class="form-group">
+                                    <input type="radio" id="working" />
+                                    <label>Working</label>
+                                    <input type="radio" id="retired" />
+                                    <label>Retired</label>
+                                    <input type="radio" id="ret_working" />
+                                    <label>Retired Working</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <label>STATUS</label>
+                                <div class="form-group">
+                                    <input type="radio" id="active" />
+                                    <label>Active</label>
+                                    <input type="radio" id="in_active" />
+                                    <label>In Active</label>
+                                </div>
+                            </div>
                             <div class="col-sm-4">
                                 <div class="form-group">
-                                    <label>PAY</label>
-                                    <input class="form-control" type="text" id="pay" name="pay" value="{{ $empData['pay'] }}" />
+                                <button type="button" id="update" class="btn btn-primary form-control">Update</button>
                                 </div>
                             </div>
                         </div>
-                        <div class="row col-sm-12">                                 
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label>GRADE PAY</label>
-                                    <input class="form-control" type="text" id="grade_pay" name="grade_pay" value="{{ $empData['grade_pay'] }}" />
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label>TOTAL</label>
-                                    <input class="form-control" type="text" id="total" name="total" value="{{ $empData['total'] }}" />
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label>D.A (17%)</label>
-                                    <input class="form-control" type="text" id="da_17" name="da_17" value="{{ $empData['da_17'] }}" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row col-sm-12">                             
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label>H.A.</label>
-                                    <input class="form-control" type="text" id="ha" name="ha" value="{{ $empData['ha'] }}" />
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label>H.R.A</label>
-                                    <input class="form-control" type="text" id="hra" name="hra" value="{{ $empData['hra'] }}" />
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label>C.C.A</label>
-                                    <input class="form-control" type="text" id="cca" name="cca" value="{{ $empData['cca'] }}" />
-                                </div>
-                            </div>
-                        </div>  
-                        <div class="row col-sm-12">                                  
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label>TOTAL SALARY</label>
-                                    <input class="form-control" type="text" id="total_salary" name="total_salary" value="{{ $empData['total_salary'] }}" />
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label>Basic+ D.A.</label>
-                                    <input class="form-control" type="text" id="basic_da" name="basic_da" value="{{ $empData['basic_da'] }}" />
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label>I.T</label>
-                                    <input class="form-control" type="text" id="it" name="it" value="{{ $empData['it'] }}" />
-                                </div>
-                            </div>
-                        </div>  
-                        <div class="row col-sm-12">                                  
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label>N.P.S</label>
-                                    <input class="form-control" type="text" id="nps" name="nps" value="{{ $empData['nps'] }}" />
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label>CO-OPERATIVE LOAN</label>
-                                    <input class="form-control" type="text" id="co_operative_loan" name="co_operative_loan" value="{{ $empData['co_operative_loan'] }}" />
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label>L.I.C</label>
-                                    <input class="form-control" type="text" id="lic" name="lic" value="{{ $empData['lic'] }}" />
-                                </div>
-                            </div>
-                        </div>   
-                        <div class="row col-sm-12">                                 
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label>GR.INS</label>
-                                    <input class="form-control" type="text" id="gr_ins" name="gr_ins" value="{{ $empData['gr_ins'] }}" />
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label>TOTAL DEDU.</label>
-                                    <input class="form-control" type="text" id="total_dedu" name="total_dedu" value="{{ $empData['total_dedu'] }}" />
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label>TOTAL PAYMENT</label>
-                                    <input class="form-control" type="text" id="total_payment" name="total_payment" value="{{ $empData['total_payment'] }}" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row col-sm-12">                                    
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label>N.P.S. GOVT. SHARE</label>
-                                    <input class="form-control" type="text" id="nps_govt_share" name="nps_govt_share" value="{{ $empData['nps_govt_share'] }}" />
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label>Employee status</label>
-                                    <label>Working</label><input class="form-control" type="radio" id="emp" name="emp_status" />
-                                <label>Retired</label><input class="form-control" type="radio" id="emp" name="emp_status" />
-                                <label>Retired Working</label><input class="form-control" type="radio" id="emp" name="emp_status" />
-                                </div>
-                                
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label>Status</label>
-                                    <label>Active</label><input class="form-control" type="radio" id="status" name="status" />
-                                </div>
-                                <label>In Active</label><input class="form-control" type="radio" id="status" name="status" />
-                            </div>
-                        </div> 
+                        <input type="hidden" id="year" value="{{ $empData['year'] }}" />
+                        <input type="hidden" id="month" value="{{ $empData['month'] }}" />
                         @endif
-                        <button type="button" id="update" class="btn btn-primary btn-sm">Update</button>
                     </form>
+                    <div id="table_data" class="row table-responsive">
+                        <div class="row text-center"> 
+                            <div class="col-sm-12">
+                                <button type="button" id="add" class="btn btn-primary btn-sm">Add Salary</button>
+                            </div>
+                        </div>
+                        <table id="table" class="table table-stripped table-bordered data-tables">
+                            <thead>
+                            <tr>
+                                <th>Action</th>
+                                <th>YEAR</th>
+                                <th>MONTH</th>
+                                <th>DOB</th>
+                                <th>DATE OF APPOINTMENT</th>
+                                <th>DATE OF INCREAMENT</th>
+                                <th>PAY BAND / LEVEL</th>
+                                <th>GRADE PAY</th>
+                                <th>TOTAL</th>
+                                <th>D.A (17%)</th>
+                                <th>H.A.</th>
+                                <th>H.R.A.</th>
+                                <th>C.C.A</th>
+                                <th>TOTAL SALARY</th>
+                                <th>Basic+ D.A.</th>
+                                <th>I.T</th>
+                                <th>N.P.S</th>
+                                <th>CO-OPERATIVE LOAN</th>
+                                <th>L.I.C</th>
+                                <th>GR.INS</th>
+                                <th>TOTAL DEDU.</th>
+                                <th>GPF LOAN</th>
+                                <th>TOTAL PAYMENT</th>
+                                <th>N.P.S. GOVT. SHARE</th>
+                            </tr>
+                            </thead>
+                                <tr>
+                                    <td>
+                                        <button class="edit" id="edit_1" data-id="1"  data-month="02" data-year="2020" title="Edit" data-toggle="modal" data-target="#modalLoginForm">Edit</button>
+                                    </td>
+                                    <td>2020</td>
+                                    <td>01</td>
+                                    <td>{{ $empData['data'][0]['dob'] }}</td>
+                                    <td>{{ $empData['data'][0]['date_of_apptt'] }}</td>
+                                    <td>{{ $empData['data'][0]['date_of_incr'] }}</td>
+                                    <td>{{ $empData['data'][0]['pay'] }}</td>
+                                    <td>{{ $empData['data'][0]['grade_pay'] }}</td>
+                                    <td>{{ $empData['data'][0]['dototalb'] }}</td>
+                                    <td>{{ $empData['data'][0]['da_17'] }}</td>
+                                    <td>{{ $empData['data'][0]['ha'] }}</td>
+                                    <td>{{ $empData['data'][0]['hra'] }}</td>
+                                    <td>{{ $empData['data'][0]['cca'] }}</td>
+                                    <td>{{ $empData['data'][0]['total_salary'] }}</td>
+                                    <td>{{ $empData['data'][0]['basic_da'] }}</td>
+                                    <td>{{ $empData['data'][0]['it'] }}</td>
+                                    <td>{{ $empData['data'][0]['nps'] }}</td>
+                                    <td>{{ $empData['data'][0]['co_operative_loan'] }}</td>
+                                    <td>{{ $empData['data'][0]['lic'] }}</td>
+                                    <td>{{ $empData['data'][0]['gr_ins'] }}</td>
+                                    <td>{{ $empData['data'][0]['total_dedu'] }}</td>
+                                    <td>{{ $empData['data'][0]['gpf_loan'] }}</td>
+                                    <td>{{ $empData['data'][0]['total_payment'] }}</td>
+                                    <td>{{ $empData['data'][0]['nps_govt_share'] }}</td>
+                                </tr>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<div class="modal fade" id="modalLoginForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Employee</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            
+            <div id="modaldata"></div>
+        </div>
+    </div>
+  </div>
+</div>
 @endsection
+@push('script')
+    <script>
+        $(document).on('click', '.edit', function() {
+            
+            $.ajax({
+                url: "{{ url('employee/edit') }}",
+                type:'post',
+                data: {
+                    id:$(this).data('id'),
+                    month:$(this).data('month'),
+                    year:$(this).data('year'),
+                    _token: "{{ csrf_token() }}"
+                },
+
+                success: function(resp) {
+                    $('#modaldata').html(resp);
+                },
+
+                error: function() {
+
+                }
+            })
+
+        })
+    </script>
+@endpush
