@@ -23,17 +23,18 @@ Route::get('/logout', function () {
     return redirect()->to('/login');
 })->name('logout');
 
-/* AUTH Registration Routes */
-Route::get('/register', 'Auth\RegisterController@getRegister')->name('register');
-Route::post('/register', 'Auth\RegisterController@postRegister');
+// /* AUTH Registration Routes */
+// Route::get('/register', 'Auth\RegisterController@getRegister')->name('register');
+// Route::post('/register', 'Auth\RegisterController@postRegister');
 
 
 Route::group(['prefix' => 'employee', 'as' => 'emp.', 'middleware' => ['auth']], function () {
     Route::get('', 'EmployeeContoller@index')->name('index');
     Route::post('/import', 'EmployeeContoller@import')->name('import');
-    Route::get('/edit/{id}', 'EmployeeContoller@edit')->name('edit');
+    Route::get('/{id}/edit', 'EmployeeContoller@edit')->name('edit');
+    Route::get('/report', 'EmployeeContoller@report')->name('report');
     Route::post('/edit', 'EmployeeContoller@getData');
-    Route::post('/update/{id}', 'EmployeeContoller@update')->name('update');
+    Route::post('/{id}/delete', 'EmployeeContoller@destroy')->name('delete');
 });
 
 // Employee Route

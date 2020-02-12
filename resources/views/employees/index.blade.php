@@ -8,9 +8,9 @@
                 <div class="card-header">Employee Dashboard</div>
                 <div class="card-body">
                     @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
+                    <div class="alert alert-success" role="alert">
+                        {{ session('status') }}
+                    </div>
                     @endif
                     <div class="row">
                         <form method="post" id="import_xls" action="{{ route('emp.import') }}" enctype="multipart/form-data" class="col-sm-12">
@@ -26,7 +26,7 @@
                                     <div class="form-group">
                                         <label>Month</label>
                                         <div class="input-group">
-                                            <input id="month" type="text" class="date-time-picker form-control date" name="month" data-options='{"timepicker":false, "format":"m/Y"}' autocomplete="off" readonly>
+                                            <input id="month" type="text" class="date-time-picker form-control date" name="month" data-options='{"timepicker":false, "format":"d/m/Y"}' autocomplete="off" readonly>
                                             <span class="input-group-append">
                                                 <span class="input-group-text add-on white">
                                                 <i class="icon-calendar"></i>
@@ -44,7 +44,7 @@
                     </div>
                     <div class="row text-center"> 
                         <div class="col-sm-12">
-                            <button type="button" id="report" class="btn btn-success btn-sm">Tax Report</button>
+                            <button type="button" id="report" class="btn btn-success btn-sm" onclick="window.location.href='{{ route('emp.report') }}'">Tax Report</button>
                         </div>
                     </div>
                     <br/>
@@ -66,8 +66,14 @@
                                     <tr>
                                         <td class="text-center">
                                             <div class="btn-group">
-                                                <button type="button" class="btn btn-sm btn-warning">Report</button>
-                                                <button type="button" class="btn btn-sm btn-success">Edit</button>
+                                                <form method="POST" action="{{ route('emp.delete', [$employee->id]) }}">
+                                                    {{ csrf_field() }}
+                                                    <button type="submit" class="btn btn-sm btn-danger" onclick="confirmDialog('Are you sure ?', function (e) {
+                                                        e.preventDefault();
+                                                        $(this).closest('form').submit();
+                                                    })">Delete</button>
+                                                </form>
+                                                <button type="button" class="btn btn-sm btn-warning" onclick="window.location.href='{{ route('emp.edit', [$employee->id]) }}'">Edit</button>
                                             </div>
                                         </td>
                                         <td>{{ $employee->id }}</td>
@@ -107,5 +113,11 @@
             }
         });
     });
+
+    function confirmDialog(message, callback) {
+        if (confirm(message)) {
+            callback();
+        }
+    }
 </script>
 @endpush
