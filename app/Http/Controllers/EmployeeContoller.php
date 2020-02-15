@@ -70,7 +70,9 @@ class EmployeeContoller extends Controller
         $data = Excel::selectSheets('salary')->load($destinationPath.'/'.$filename, function ($reader) {
             // reader methods
             $reader->calculate();
-        })->get();
+            $reader->ignoreEmpty();
+            // $reader->setSeparator('-');
+        }, 'UTF-8')->get();
         foreach ($data as $row) {
             $row = collect($row);
             $validator = Validator::make($row->all(), [
@@ -90,32 +92,14 @@ class EmployeeContoller extends Controller
 
             $employee['employee_name'] = $row['teacheremployees_name_designation'];
             unset($employee['teacheremployees_name_designation']);
-            $emp_data = $row->only([
-                'dob',
-                'date_of_apptt',
-                'date_of_incr',
-                'pay',
-                'grade_pay',
-                'total',
-                'da_17',
-                'ha',
-                'hra',
-                'cca',
-                'total_salary',
-                'basic_da',
-                'it',
-                'nps',
-                'co_operative_loan',
-                'lic',
-                'gr_ins',
-                'total_dedu',
-                'total_payment',
-                'nps_govt_share',
-                'gpf',
-                'gpf_loan',
-            ])->toArray();
-            $emp_data['month'] = $date->format('m');
-            $emp_data['year'] = $date->format('Y');
+            $emp_data = [
+                'month' => $date->format('m'),
+                'year' => $date->format('Y'),
+                'data' => $row->except([
+                    's_no', 
+                    'teacheremployees_name_designation'
+                ])->toArray(),
+            ];
             
             if (!empty($employee['employee_name'])) {
                 ++$count;
@@ -145,17 +129,47 @@ class EmployeeContoller extends Controller
 
     public function report() 
     {
-        $tax_report = \App\Models\EmployeeData::select(
-            DB::raw(
-                'sum(hra) as hra, sum(total_salary) as total_salary, sum(lic) as lic, sum(it) as it, sum(gr_ins) as gr_ins, sum(gpf) as gpf, sum(gpf_loan) as gpf_loan, month, year'
-            )                
-        )
-        ->groupBy('month','year')
-        ->get();
-
-        $employees = \App\Models\Employee::with('data')
-        ->get();
+        $tax_report = \App\Models\EmployeeData::with('employee')->get();
+        foreach ($tax_report as $report) {
+            $flag = 'gpf';
+            if (isset($report->data['nps_govt_share']) && $report->data['nps_govt_share'] > 0) {
+                $flag = 'nps';
+            } 
+            
+            $data[$report->month.'/'.$report->year][$flag][] = $report->data;
+            $employees[$flag][$report->employee->id] = $report->employee->toArray();
+            $employees[$flag][$report->employee->id]['data'][] = collect($report->data)->merge(
+                [
+                    'year' => $report->year,
+                    'month' => $report->month,
+                ]
+            );
+        }
         
-        return view('employees.report', compact('tax_report', 'employees'));
+        $tax_report = array();
+        foreach ($data as $key => $taxes) {
+            list($month, $year) = explode('/', $key);
+            foreach ($taxes as $key => $value) {
+                $value = collect($value);
+                $tax_report[$key][] = array(
+                    'month' => $month,
+                    'year' => $year,
+                    'hra' => $value->sum('hra'),
+                    'total_salary' => $value->sum('total_salary'),
+                    'lic' => $value->sum('lic'),
+                    'it' => $value->sum('it'),
+                    'gr_ins' => $value->sum('gr_ins'),
+                    'gpf' => $value->sum('gpf'),
+                    'gpf_loan' => $value->sum('gpf_loan'),
+                    'nps_govt_share' => $value->sum('nps_govt_share'),
+                );
+            }
+        }
+        // dd($employees);
+        
+        return view('employees.report', compact(
+            'tax_report', 
+            'employees'
+        ));
     }
 }
