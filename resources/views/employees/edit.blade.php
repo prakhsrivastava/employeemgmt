@@ -5,7 +5,12 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Edit Employee</div>
+                <div class="card-header">
+                    Edit Employee
+                    <div class="text-right">
+                        <a href="{{ route('emp.index') }}" class="link-text">Back to Dashboard</a>
+                    </div>
+                </div>
                 <div class="card-body">
                     <form method="post" action="" enctype="multipart/form-data">
                         {{ csrf_field() }}
