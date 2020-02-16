@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
-use App\Models\Employee;
 use Carbon\Carbon;
 use Validator;
 use Excel;
@@ -67,12 +66,43 @@ class EmployeeContoller extends Controller
         $filename = rand().$file->getClientOriginalName();
         $file->move($destinationPath, $filename);
         $count = 0;
+        $headers = Excel::selectSheets('salary')->load($destinationPath.'/'.$filename, function ($reader) {
+            // reader methods
+            $reader->noHeading();
+        }, 'UTF-8')->first();        
+        foreach ($headers as $key => $header) {
+            $header = preg_replace('/\s+/is', ' ', $header);
+            $exclHeader = \App\Models\ExcelHeader::where('header', $header)
+                    ->first();
+            if (empty($exclHeader) && !empty($header)) {
+                $show_order = $key + 1;
+                $exclHeader = \App\Models\ExcelHeader::where('show_order', $show_order)
+                    ->first();
+                if (!empty($exclHeader)) {
+                    $exclHeader = \App\Models\ExcelHeader::select(
+                        DB::raw('max(show_order) as show_order')
+                    )
+                    ->first();
+                    $show_order = $exclHeader['show_order'] + 1;
+                }
+
+                $excl = \App\Models\ExcelHeader::create([
+                    'header' => $header,
+                    'show_order' => $show_order,
+                ]);
+            }
+        }
+        
         $data = Excel::selectSheets('salary')->load($destinationPath.'/'.$filename, function ($reader) {
             // reader methods
             $reader->calculate();
             $reader->ignoreEmpty();
             // $reader->setSeparator('-');
         }, 'UTF-8')->get();
+        unlink($destinationPath . '/' . $filename);
+        // dd($headers);
+        // dd($data);
+
         foreach ($data as $row) {
             $row = collect($row);
             $validator = Validator::make($row->all(), [
@@ -103,10 +133,10 @@ class EmployeeContoller extends Controller
             
             if (!empty($employee['employee_name'])) {
                 ++$count;
-                $emp = Employee::where('employee_name', $employee['employee_name'])
+                $emp = \App\Models\Employee::where('employee_name', $employee['employee_name'])
                     ->first();
                 if (empty($emp)) {
-                    $emp = Employee::create($employee);
+                    $emp = \App\Models\Employee::create($employee);
                 } else {
                     $emp->update($employee);
                 }
@@ -123,7 +153,6 @@ class EmployeeContoller extends Controller
             }
         }
         
-        unlink($destinationPath.'/'.$filename);
         return redirect()->route('emp.index')->with('success', $count.' Records Added/Updated');
     }
 

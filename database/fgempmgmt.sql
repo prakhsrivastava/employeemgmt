@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 16, 2020 at 09:39 AM
+-- Generation Time: Feb 16, 2020 at 10:44 AM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.1
 
@@ -54,6 +54,20 @@ CREATE TABLE `employee_data` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `excel_headers`
+--
+
+CREATE TABLE `excel_headers` (
+  `id` int(11) NOT NULL,
+  `header` varchar(100) NOT NULL,
+  `show_order` int(11) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 --
 -- Indexes for dumped tables
 --
@@ -72,6 +86,12 @@ ALTER TABLE `employee_data`
   ADD KEY `employee_data_employee_id_foreign` (`employee_id`);
 
 --
+-- Indexes for table `excel_headers`
+--
+ALTER TABLE `excel_headers`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -86,6 +106,12 @@ ALTER TABLE `employees`
 --
 ALTER TABLE `employee_data`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `excel_headers`
+--
+ALTER TABLE `excel_headers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables

@@ -33,21 +33,21 @@
                             <div class="col-sm-4">
                                 <label>EMPLOYEE STATUS</label>
                                 <div class="form-group">
-                                    <input type="radio" id="working" />
+                                    <input type="radio" id="working" name="emp_status" @if($empData['emp_status'] == 'working') checked @endif value="working"/>
                                     <label>Working</label>
-                                    <input type="radio" id="retired" />
+                                    <input type="radio" id="retired" name="emp_status" @if($empData['emp_status'] == 'retired') checked @endif value="retired"/>
                                     <label>Retired</label>
-                                    <input type="radio" id="ret_working" />
+                                    <input type="radio" id="ret_working" name="emp_status" @if($empData['emp_status'] == 'retired_working') checked @endif value="retired_working"/>
                                     <label>Retired Working</label>
                                 </div>
                             </div>
                             <div class="col-sm-4">
                                 <label>STATUS</label>
                                 <div class="form-group">
-                                    <input type="radio" id="active" />
+                                    <input type="radio" id="active" name="status" @if($empData['status']) checked @endif value="1"/>
                                     <label>Active</label>
-                                    <input type="radio" id="in_active" />
-                                    <label>In Active</label>
+                                    <input type="radio" id="inactive" name="status" @if(!$empData['status']) checked @endif value="0"/>
+                                    <label>Inactive</label>
                                 </div>
                             </div>
                             <div class="col-sm-4">
@@ -56,8 +56,6 @@
                                 </div>
                             </div>
                         </div>
-                        <input type="hidden" id="year" value="{{ $empData['year'] }}" />
-                        <input type="hidden" id="month" value="{{ $empData['month'] }}" />
                         @endif
                     </form>
                     <div id="table_data" class="row table-responsive">
