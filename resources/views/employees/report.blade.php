@@ -81,7 +81,7 @@
                                         </thead>
                                         <tbody>
                                             @foreach ($employee['data'] as $key => $data)
-                                            @if (!isset($data['nps_govt_share']) || (isset($data['nps_govt_share']) && $data['nps_govt_share'] <= 0)) 
+                                            @if (!isset($data['nps'])) 
                                             <tr>
                                                 <td>{{ $key + 1 }}</td>
                                                 <td>{{ $data['month'] }}/{{ $data['year'] }}</td>
@@ -125,7 +125,7 @@
                                                 <td>{{ $tax['total_salary'] }}</td>
                                                 <td>{{ $tax['lic'] }}</td>
                                                 <td>{{ $tax['it'] }}</td>
-                                                <td>{{ $tax['nps_govt_share'] }}</td>
+                                                <td>{{ $tax['nps'] }}</td>
                                                 <td>{{ $tax['gr_ins'] }}</td>
                                             </tr>
                                             @endforeach                                    
@@ -145,13 +145,13 @@
                                                 <th>Total Salary</th>
                                                 <th>L.I.C</th>
                                                 <th>I.T</th>
-                                                <th>N.P.F./P.P.F</th>
+                                                <th>N.P.S./P.P.F</th>
                                                 <th>Gr.Ins</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($employee['data'] as $key => $data) 
-                                            @if (isset($data['nps_govt_share']) && $data['nps_govt_share'] > 0)   
+                                            @if (isset($data['nps']))   
                                             <tr>
                                                 <td>{{ $key + 1 }}</td>
                                                 <td>{{ $data['month'] }}/{{ $data['year'] }}</td>
@@ -159,7 +159,7 @@
                                                 <td>{{ $data['total_salary'] }}</td>
                                                 <td>{{ $data['lic'] }}</td>
                                                 <td>{{ $data['it'] }}</td>
-                                                <td>{{ $data['nps_govt_share'] }}</td>
+                                                <td>{{ $data['nps'] }}</td>
                                                 <td>{{ $data['gr_ins'] }}</td>
                                             </tr>
                                             @endif

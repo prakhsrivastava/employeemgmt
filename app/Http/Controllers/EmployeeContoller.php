@@ -130,9 +130,13 @@ class EmployeeContoller extends Controller
     public function report() 
     {
         $tax_report = \App\Models\EmployeeData::with('employee')->get();
+        $employees = [
+            'gpf' => [],
+            'nps' => []
+        ];
         foreach ($tax_report as $report) {
             $flag = 'gpf';
-            if (isset($report->data['nps_govt_share']) && $report->data['nps_govt_share'] > 0) {
+            if (isset($report->data['nps'])) {
                 $flag = 'nps';
             } 
             
@@ -146,7 +150,10 @@ class EmployeeContoller extends Controller
             );
         }
         
-        $tax_report = array();
+        $tax_report = [
+            'gpf' => [],
+            'nps' => []
+        ];
         foreach ($data as $key => $taxes) {
             list($month, $year) = explode('/', $key);
             foreach ($taxes as $key => $value) {
@@ -161,6 +168,7 @@ class EmployeeContoller extends Controller
                     'gr_ins' => $value->sum('gr_ins'),
                     'gpf' => $value->sum('gpf'),
                     'gpf_loan' => $value->sum('gpf_loan'),
+                    'nps' => $value->sum('nps'),
                     'nps_govt_share' => $value->sum('nps_govt_share'),
                 );
             }
