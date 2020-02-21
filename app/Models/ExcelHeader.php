@@ -11,5 +11,6 @@ class ExcelHeader extends Model
     protected $fillable = [
         'header',
         'show_order',
+        'slug',
     ];
 }

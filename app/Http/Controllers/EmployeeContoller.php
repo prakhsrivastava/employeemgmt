@@ -21,9 +21,9 @@ class EmployeeContoller extends Controller
         return view('employees.create');
     }
     
-    public function store(Request $req)
+    public function store($id, Request $req)
     {
-        return redirect(route('emp.index'));
+        return redirect(route('emp.edit', [$id]));
     }
     
     public function show($id)
@@ -33,14 +33,25 @@ class EmployeeContoller extends Controller
     
     public function edit($id)
     {
-        $empData = \App\Models\Employee::where('id', $id)->with('data')->first();
-        // print "<pre>";print_r($empData->toArray());die;
-        return view('employees.edit', compact('empData'));
+        $empData = \App\Models\Employee::where('id', $id)
+            ->with('data')
+            ->first();
+        
+        $headers = \App\Models\ExcelHeader::orderBy('show_order')
+            ->get()
+            ->except([1, 2])
+            ->pluck('header', 'slug');
+
+        return view('employees.edit', compact(
+            'empData', 
+            'headers'
+        ));
     }
 
     public function getData(Request $req)
     {
-        $empData = \App\Models\EmployeeData::where(['id' => $req->id])->first();
+        $empData = \App\Models\EmployeeData::where(['id' => $req->id])
+            ->first();
         
         return view('employees.edit_model', compact('empData'));
     }
@@ -48,7 +59,8 @@ class EmployeeContoller extends Controller
     public function update(Request $req, $id)
     {
         $postData = $req->except('_token');
-        $empData = \App\Models\EmployeeData::where('id', $id)->update($postData);
+        $empData = \App\Models\EmployeeData::where('id', $id)
+            ->update($postData);
         return redirect()->back();
     }
     
@@ -66,12 +78,15 @@ class EmployeeContoller extends Controller
         $filename = rand().$file->getClientOriginalName();
         $file->move($destinationPath, $filename);
         $count = 0;
-        $headers = Excel::selectSheets('salary')->load($destinationPath.'/'.$filename, function ($reader) {
+        $headers = Excel::selectSheets('salary')
+            ->load($destinationPath.'/'.$filename, function ($reader) {
             // reader methods
             $reader->noHeading();
         }, 'UTF-8')->first();        
         foreach ($headers as $key => $header) {
             $header = preg_replace('/\s+/is', ' ', $header);
+            $sluggedHead = $this->createSlug($header, '_');
+
             $exclHeader = \App\Models\ExcelHeader::where('header', $header)
                     ->first();
             if (empty($exclHeader) && !empty($header)) {
@@ -89,6 +104,12 @@ class EmployeeContoller extends Controller
                 $excl = \App\Models\ExcelHeader::create([
                     'header' => $header,
                     'show_order' => $show_order,
+                    'slug' => $sluggedHead,
+                ]);
+            } else if (!empty($exclHeader)) {
+                $exclHeader->update([
+                    'header' => $header,
+                    'slug' => $sluggedHead,
                 ]);
             }
         }
@@ -100,8 +121,6 @@ class EmployeeContoller extends Controller
             // $reader->setSeparator('-');
         }, 'UTF-8')->get();
         unlink($destinationPath . '/' . $filename);
-        // dd($headers);
-        // dd($data);
 
         foreach ($data as $row) {
             $row = collect($row);
@@ -208,5 +227,17 @@ class EmployeeContoller extends Controller
             'tax_report', 
             'employees'
         ));
+    }
+
+    private function createSlug($header, $separator) {
+        $sluggedHead = preg_replace('![' . preg_quote($separator) . ']+!u', $separator, $header);
+
+        // Remove all characters that are not the separator, letters, numbers, or whitespace.
+        $sluggedHead = preg_replace('![^' . preg_quote($separator) . '\pL\pN\s]+!u', '', mb_strtolower($sluggedHead));
+
+        // Replace all separator characters and whitespace by a single separator
+        $sluggedHead = preg_replace('![' . preg_quote($separator) . '\s]+!u', $separator, $sluggedHead);
+
+        return trim($sluggedHead, $separator);
     }
 }
