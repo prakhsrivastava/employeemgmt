@@ -23,20 +23,23 @@ class EmployeeContoller extends Controller
     
     public function store($id, Request $req)
     {
+        $data = $req->all();
+        $emp = \App\Models\Employee::where('id', $id)
+            ->first();
+        $emp->update($data);
+
         return redirect(route('emp.edit', [$id]));
     }
-    
-    public function show($id)
-    {
-        // return view('employees.show', compact('data' => $showData));
-    }
-    
+
     public function edit($id)
     {
         $empData = \App\Models\Employee::where('id', $id)
             ->with('data')
             ->first();
         
+        if (empty($empData)) {
+            return redirect(route('emp.index'));
+        }
         $headers = \App\Models\ExcelHeader::orderBy('show_order')
             ->get()
             ->except([1, 2])
@@ -175,9 +178,20 @@ class EmployeeContoller extends Controller
         return redirect()->route('emp.index')->with('success', $count.' Records Added/Updated');
     }
 
-    public function report() 
+    public function report(Request $req) 
     {
-        $tax_report = \App\Models\EmployeeData::with('employee')->get();
+        $session_start = date('Y');
+        $session_end = date('Y') + 1;
+        if ($req->has('session_start') && $req->has('session_end')) {
+            $session_start = $req->session_start;
+            $session_end = $req->session_end;
+        }
+        $data = array();
+
+        $tax_report = \App\Models\EmployeeData::where('year', '>=', $session_start)
+            ->where('year', '<=', $session_end)
+            ->with('employee')
+            ->get();
         $employees = [
             'gpf' => [],
             'nps' => []
@@ -225,6 +239,8 @@ class EmployeeContoller extends Controller
         
         return view('employees.report', compact(
             'tax_report', 
+            'session_start', 
+            'session_end', 
             'employees'
         ));
     }
@@ -239,5 +255,11 @@ class EmployeeContoller extends Controller
         $sluggedHead = preg_replace('![' . preg_quote($separator) . '\s]+!u', $separator, $sluggedHead);
 
         return trim($sluggedHead, $separator);
+    }
+
+    public function addArriear($employee_id, Request $req) {
+        $data = $req->all();
+        
+        return redirect(route('emp.edit', [$employee_id]));
     }
 }

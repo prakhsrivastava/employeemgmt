@@ -17,6 +17,38 @@
                         {{ session('status') }}
                     </div>
                     @endif
+                    <form method="GET" class="form-horizontal">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="form-label">Session Start</label>
+                                    <select name="session_start" class="form-control">
+                                        <option value="">Select</option>
+                                        @for ($i = 2000; $i < date("Y") + 1; $i++)
+                                        <option value="{{ $i }}" @if($session_start == $i) selected @endif>{{ $i }}</option>
+                                        @endfor
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="form-label">Session End</label>
+                                    <select name="session_end" class="form-control">
+                                        <option value="">Select</option>
+                                        @for ($i = 2000; $i <= date("Y") + 1; $i++)
+                                        <option value="{{ $i }}" @if($session_end == $i) selected @endif>{{ $i }}</option>
+                                        @endfor
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="form-label">&nbsp;</label>
+                                    <button type="submit" class="btn btn-primary btn-sm form-control">Search</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                     <div class="list-tab-outer d-flex justify-content-between">
                         <ul id="myTab4" role="tablist" class="nav nav-tabs card-tabs no-b r-0 align-self-end">
                             <li class="nav-item">
@@ -58,45 +90,21 @@
                                                 <td>{{ $tax['gpf'] }}</td>
                                                 <td>{{ $tax['gr_ins'] }}</td>
                                             </tr>
-                                            @endforeach                                    
-                                        </tbody>
-                                    </table>                            
-                                </div>
-                                @foreach ($employees['gpf'] as $key => $employee)
-                                <div class="col-sm-12 table-responsive">
-                                    <hr/>
-                                    <p class="text-center text-danger"><strong>{{ $employee['employee_name'] }}</strong></p> 
-                                    <table class="table table-bordered table-hover data-tables" data-options='{"searching":false}'>
-                                        <thead>
-                                            <tr>
-                                                <th>S. No.</th>
-                                                <th>Month</th>
-                                                <th>H.R.A</th>
-                                                <th>Total Salary</th>
-                                                <th>L.I.C</th>
-                                                <th>I.T</th>
-                                                <th>G.P.F.</th>
-                                                <th>Gr.Ins</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($employee['data'] as $key => $data)
-                                            @if (!isset($data['nps'])) 
-                                            <tr>
-                                                <td>{{ $key + 1 }}</td>
-                                                <td>{{ $data['month'] }}/{{ $data['year'] }}</td>
-                                                <td>{{ $data['hra'] }}</td>
-                                                <td>{{ $data['total_salary'] }}</td>
-                                                <td>{{ $data['lic'] }}</td>
-                                                <td>{{ $data['it'] }}</td>
-                                                <td>{{ $data['gpf'] }}</td>
-                                                <td>{{ $data['gr_ins'] }}</td>
-                                            </tr>
-                                            @endif
                                             @endforeach
                                         </tbody>
+                                        <tfoot>
+                                            @include('employees.partials.extra_reports', [
+                                                'report' => collect($tax_report['gpf']),
+                                                'type' => 'gpf'
+                                            ])
+                                        </tfoot>
                                     </table>
                                 </div>
+                                @foreach ($employees['gpf'] as $key => $employee)
+                                @include('employees.partials.single_report', [
+                                    'employee' => $employee,
+                                    'type' => 'gpf'
+                                ])
                                 @endforeach
                             </div>
                         </div>
@@ -128,45 +136,21 @@
                                                 <td>{{ $tax['nps'] }}</td>
                                                 <td>{{ $tax['gr_ins'] }}</td>
                                             </tr>
-                                            @endforeach                                    
-                                        </tbody>
-                                    </table>                            
-                                </div>
-                                @foreach ($employees['nps'] as $key => $employee)
-                                <div class="col-sm-12 table-responsive">
-                                    <hr/>
-                                    <p class="text-center text-danger"><strong>{{ $employee['employee_name'] }}</strong></p> 
-                                    <table class="table table-bordered table-hover data-tables" data-options='{"searching":false}'>
-                                        <thead>
-                                            <tr>
-                                                <th>S. No.</th>
-                                                <th>Month</th>
-                                                <th>H.R.A</th>
-                                                <th>Total Salary</th>
-                                                <th>L.I.C</th>
-                                                <th>I.T</th>
-                                                <th>N.P.S./P.P.F</th>
-                                                <th>Gr.Ins</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($employee['data'] as $key => $data) 
-                                            @if (isset($data['nps']))   
-                                            <tr>
-                                                <td>{{ $key + 1 }}</td>
-                                                <td>{{ $data['month'] }}/{{ $data['year'] }}</td>
-                                                <td>{{ $data['hra'] }}</td>
-                                                <td>{{ $data['total_salary'] }}</td>
-                                                <td>{{ $data['lic'] }}</td>
-                                                <td>{{ $data['it'] }}</td>
-                                                <td>{{ $data['nps'] }}</td>
-                                                <td>{{ $data['gr_ins'] }}</td>
-                                            </tr>
-                                            @endif
                                             @endforeach
                                         </tbody>
+                                        <tfoot>
+                                            @include('employees.partials.extra_reports', [
+                                                'report' => collect($tax_report['nps']),
+                                                'type' => 'nps'
+                                            ])
+                                        </tfoot>
                                     </table>
                                 </div>
+                                @foreach ($employees['nps'] as $key => $employee)
+                                @include('employees.partials.single_report', [
+                                    'employee' => $employee,
+                                    'type' => 'nps'
+                                ])
                                 @endforeach
                             </div>
                         </div>

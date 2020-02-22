@@ -143,5 +143,45 @@
 </html>
 <!-- Scripts -->
 <script src="{{ asset('js/app.js') }}"></script>
+<script type="text/javascript">
+    $(document).on('keypress', '.price', function(e) {
+        return isPrice(e);
+    });
+
+    function isPrice(evt) {
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if ((charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) || charCode == 13) {
+            return false;
+        } else {
+            // if dot sign entered more than once then don't allow to enter dot sign again. 46 is the code for dot sign
+            var parts = evt.target.value.split('.');
+            if (parts.length > 1) {
+                if (parts[0].length > 9) {
+                    if (charCode == 8) {
+                        return true;
+                    }
+                }
+                if (charCode == 46) {
+                    return false;
+                } else if (parts[1].length > 1) {
+                    if (!(charCode == 8 || evt.target.selectionStart <= (evt.target.value.length - 3))) {
+                        return false;
+                    }
+                }
+                if (parts[0].length > 9 && parts[1].length > 1) {
+                    return false;
+                }
+            } else if (evt.target.value.length > 9) {
+                if (charCode == 46 || charCode == 8) {
+                    return true;
+                }
+
+                return false;
+            }
+
+            return true;
+        }
+    }
+</script>
 @stack('script')
 <script>(function($,d){$.each(readyQ,function(i,f){$(f)});$.each(bindReadyQ,function(i,f){$(d).bind("ready",f)})})(jQuery,document)</script>

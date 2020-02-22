@@ -36,6 +36,7 @@ Route::group(['prefix' => 'employee', 'as' => 'emp.', 'middleware' => ['auth']],
     Route::get('/report', 'EmployeeContoller@report')->name('report');
     Route::post('/getData', 'EmployeeContoller@getData')->name('getData');
     Route::post('/{id}/delete', 'EmployeeContoller@destroy')->name('delete');
+    Route::post('/{id}/arriear', 'EmployeeContoller@addArriear')->name('add_arriear');
 });
 
 // Employee Route
