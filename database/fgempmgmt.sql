@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 16, 2020 at 10:44 AM
+-- Generation Time: Feb 22, 2020 at 04:02 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.1
 
@@ -31,12 +31,31 @@ SET time_zone = "+00:00";
 CREATE TABLE `employees` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `employee_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `designation` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `pay_band_level` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `emp_status` enum('working','retired','retired_working') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'working',
   `status` enum('0','1') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `employee_arriears`
+--
+
+CREATE TABLE `employee_arriears` (
+  `id` int(11) NOT NULL,
+  `employee_id` int(11) NOT NULL,
+  `session_start` int(11) NOT NULL,
+  `session_end` int(11) NOT NULL,
+  `da` decimal(10,0) NOT NULL,
+  `other` decimal(10,0) NOT NULL,
+  `bonus` decimal(10,0) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -63,6 +82,7 @@ CREATE TABLE `employee_data` (
 CREATE TABLE `excel_headers` (
   `id` int(11) NOT NULL,
   `header` varchar(100) NOT NULL,
+  `slug` varchar(100) NOT NULL,
   `show_order` int(11) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -76,6 +96,12 @@ CREATE TABLE `excel_headers` (
 -- Indexes for table `employees`
 --
 ALTER TABLE `employees`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `employee_arriears`
+--
+ALTER TABLE `employee_arriears`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -100,6 +126,12 @@ ALTER TABLE `excel_headers`
 --
 ALTER TABLE `employees`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `employee_arriears`
+--
+ALTER TABLE `employee_arriears`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `employee_data`
