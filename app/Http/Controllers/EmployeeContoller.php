@@ -258,8 +258,19 @@ class EmployeeContoller extends Controller
     }
 
     public function addArriear($employee_id, Request $req) {
-        $data = $req->all();
-        
+        $data = $req->except('_token');
+        $data['employee_id'] = $employee_id;
+
+        while ($data['session_end'] > $data['session_start']) {
+            $arriear = \App\Models\EmployeeArriear::updateOrCreate([
+                'employee_id' => $employee_id,
+                'session_start' => $data['session_start'],
+                'session_end' => $data['session_end']
+            ], $data);
+
+            $data['session_start']++;
+        }
+
         return redirect(route('emp.edit', [$employee_id]));
     }
 }

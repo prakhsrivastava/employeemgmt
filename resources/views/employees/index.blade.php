@@ -48,43 +48,46 @@
                         </div>
                     </div>
                     <br/>
-                    <div class="row">
-                        <div class="col-sm-12 table-responsive">
-                            <table class="table table-bordered table-hover data-tables">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center">Actions</th>
-                                        <th>S. No.</th>
-                                        <th>Name</th>
-                                        <th>Pay Band / Level</th>
-                                        <th>Working Status</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($employees as $employee)   
-                                    <tr>
-                                        <td class="text-center">
-                                            <div class="btn-group">
-                                                <form method="POST" action="{{ route('emp.delete', [$employee->id]) }}">
-                                                    {{ csrf_field() }}
-                                                    <button type="submit" class="btn btn-sm btn-danger" onclick="confirmDialog('Are you sure ?', function (e) {
-                                                        e.preventDefault();
-                                                        $(this).closest('form').submit();
-                                                    })">Delete</button>
-                                                </form>
-                                                <button type="button" class="btn btn-sm btn-warning" onclick="window.location.href='{{ route('emp.edit', [$employee->id]) }}'">Edit</button>
-                                            </div>
-                                        </td>
-                                        <td>{{ $employee->id }}</td>
-                                        <td>{{ $employee->employee_name }}</td>
-                                        <td>{{ $employee->pay_band_level }}</td>
-                                        <td>{{ $employee->emp_status }}</td>
-                                        <td>{{ ($employee->status)?'Active':'Inactive' }}</td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                    <div class="list-tab-outer d-flex justify-content-between">
+                        <ul id="myTab4" role="tablist" class="nav nav-tabs card-tabs no-b r-0 align-self-end">
+                            <li class="nav-item">
+                                <a class="nav-link active show" id="tab1" data-toggle="tab" href="#working" role="tab" aria-controls="tab1" aria-expanded="true" aria-selected="true" title="Working">Working</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="tab2" data-toggle="tab" href="#retired" role="tab" aria-controls="tab2" aria-selected="false" title="Retired">Retired</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="tab3" data-toggle="tab" href="#retired_working" role="tab" aria-controls="tab3" aria-selected="false" title="Retired Working">Retired Working</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="working" role="tabpanel" aria-labelledby="working">
+                            @include('employees.partials.table', [
+                                'employees' => collect($employees)->reject(function ($employee) {
+                                    if ($employee->emp_status != 'working') {
+                                        return true;
+                                    }
+                                })->toArray()
+                            ])
+                        </div>
+                        <div class="tab-pane fade" id="retired" role="tabpanel" aria-labelledby="retired">
+                            @include('employees.partials.table', [
+                                'employees' => collect($employees)->reject(function ($employee) {
+                                    if ($employee->emp_status != 'retired') {
+                                        return true;
+                                    }
+                                })->toArray()
+                            ])
+                        </div>
+                        <div class="tab-pane fade" id="retired_working" role="tabpanel" aria-labelledby="retired_working">
+                            @include('employees.partials.table', [
+                                'employees' => collect($employees)->reject(function ($employee) {
+                                    if ($employee->emp_status != 'retired_working') {
+                                        return true;
+                                    }
+                                })->toArray()
+                            ])
                         </div>
                     </div>
                 </div>

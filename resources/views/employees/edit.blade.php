@@ -125,8 +125,9 @@ aria-hidden="true">
                 <h4 class="modal-title">Add Arriears</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
-            <div class="modal-body">
-                <form method="POST" action="{{ route('emp.add_arriear', [$empData['id']]) }}" id="add_arriear">
+            <form method="POST" action="{{ route('emp.add_arriear', [$empData['id']]) }}" id="add_arriear">
+                {{ csrf_field() }}
+                <div class="modal-body">
                     <div class="row">
                         <div class="col-sm-4">
                             <div class="form-group">
@@ -153,7 +154,7 @@ aria-hidden="true">
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label class="form-label">Arriear D.A.</label>
-                                <input type="text" name="arriear" class="price form-control" required />
+                                <input type="text" name="da" class="price form-control" required />
                             </div>
                         </div>
                     </div>
@@ -161,7 +162,7 @@ aria-hidden="true">
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label class="form-label">Other Arriear</label>
-                                <input type="text" name="other_arriear" class="price form-control" required value="0" />
+                                <input type="text" name="other" class="price form-control" required value="0" />
                             </div>
                         </div>
                         <div class="col-sm-4">
@@ -171,12 +172,12 @@ aria-hidden="true">
                             </div>
                         </div>
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn form-btn form-grey-btn mr-2" data-dismiss="modal">Cancel</button>
-                <button type="button" class="form-btn btn" id="save_arriears">Save</button>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn form-btn form-grey-btn mr-2" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="form-btn btn" id="save_arriears">Save</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -217,7 +218,6 @@ aria-hidden="true">
 </div>
 @endsection
 @push('script')
-    $('#save_arriears').click(function () {
-        $('#add_arriear').submit();
-    });
+<script type="text/javascript">
+</script>
 @endpush
