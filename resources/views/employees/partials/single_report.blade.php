@@ -1,6 +1,6 @@
 <div class="col-sm-12 table-responsive">
     <hr/>
-    <p class="text-center text-danger"><strong>{{ $employee['employee_name'] }}</strong></p>
+    <p class="text-center text-danger">Name: <strong>{{ $employee['employee_name'] }}</strong></p>
     <table class="table table-bordered table-hover data-tables" data-options='{"searching":false}'>
         <thead>
             <tr>
@@ -39,6 +39,7 @@
         <tfoot>
             @include('employees.partials.extra_reports', [
                 'report' => collect($employee['data']),
+                'arriear' => collect($employee['arriear']),
                 'type' => $type
             ])
         </tfoot>

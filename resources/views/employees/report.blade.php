@@ -60,104 +60,38 @@
                                     aria-selected="false" title="N.P.S">N.P.S Report</a>
                             </li>
                         </ul>
+                        <div class="text-right">
+                            <button type="button" id="print" class="form-btn btn small-btn mb-2" title="Print" onclick="print_report()">Print</button>
+                        </div>
                     </div>
                     <div class="tab-content">
                         <div class="tab-pane fade show active" id="gpf" role="tabpanel" aria-labelledby="gpf">
-                            <div class="box-body no-padding border dataTable">
-                                <div class="col-sm-12 table-responsive">
-                                    <table class="table table-bordered table-hover data-tables" data-options='{"searching":false}'>
-                                        <thead>
-                                            <tr>
-                                                <th>S. No.</th>
-                                                <th>Month</th>
-                                                <th>H.R.A</th>
-                                                <th>Total Salary</th>
-                                                <th>L.I.C</th>
-                                                <th>I.T</th>
-                                                <th>G.P.F.</th>
-                                                <th>Gr.Ins</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($tax_report['gpf'] as $key => $tax)   
-                                            <tr>
-                                                <td>{{ $key + 1 }}</td>
-                                                <td>{{ $tax['month'] }}/{{ $tax['year'] }}</td>
-                                                <td>{{ $tax['hra'] }}</td>
-                                                <td>{{ $tax['total_salary'] }}</td>
-                                                <td>{{ $tax['lic'] }}</td>
-                                                <td>{{ $tax['it'] }}</td>
-                                                <td>{{ $tax['gpf'] }}</td>
-                                                <td>{{ $tax['gr_ins'] }}</td>
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
-                                        <tfoot>
-                                            @include('employees.partials.extra_reports', [
-                                                'report' => collect($tax_report['gpf']),
-                                                'type' => 'gpf'
-                                            ])
-                                        </tfoot>
-                                    </table>
-                                </div>
-                                @foreach ($employees['gpf'] as $key => $employee)
-                                @include('employees.partials.single_report', [
-                                    'employee' => $employee,
-                                    'type' => 'gpf'
-                                ])
-                                @endforeach
-                            </div>
+                            @include('employees.partials.type_table', [
+                                'type' => 'gpf',
+                                'reports' => $tax_report
+                            ])
                         </div>
                         <div class="tab-pane fade" id="nps" role="tabpanel" aria-labelledby="nps">
-                            <div class="box-body no-padding border dataTable">
-                                <div class="col-sm-12 table-responsive">
-                                    <table class="table table-bordered table-hover data-tables" data-options='{"searching":false}'>
-                                        <thead>
-                                            <tr>
-                                                <th>S. No.</th>
-                                                <th>Month</th>
-                                                <th>H.R.A</th>
-                                                <th>Total Salary</th>
-                                                <th>L.I.C</th>
-                                                <th>I.T</th>
-                                                <th>N.P.S./P.P.F</th>
-                                                <th>Gr.Ins</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($tax_report['nps'] as $key => $tax)   
-                                            <tr>
-                                                <td>{{ $key + 1 }}</td>
-                                                <td>{{ $tax['month'] }}/{{ $tax['year'] }}</td>
-                                                <td>{{ $tax['hra'] }}</td>
-                                                <td>{{ $tax['total_salary'] }}</td>
-                                                <td>{{ $tax['lic'] }}</td>
-                                                <td>{{ $tax['it'] }}</td>
-                                                <td>{{ $tax['nps'] }}</td>
-                                                <td>{{ $tax['gr_ins'] }}</td>
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
-                                        <tfoot>
-                                            @include('employees.partials.extra_reports', [
-                                                'report' => collect($tax_report['nps']),
-                                                'type' => 'nps'
-                                            ])
-                                        </tfoot>
-                                    </table>
-                                </div>
-                                @foreach ($employees['nps'] as $key => $employee)
-                                @include('employees.partials.single_report', [
-                                    'employee' => $employee,
-                                    'type' => 'nps'
-                                ])
-                                @endforeach
-                            </div>
+                            @include('employees.partials.type_table', [
+                                'type' => 'nps',
+                                'reports' => $tax_report
+                            ])
                         </div>
-                    </div>                    
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 @endsection
+@push('script')
+<script type="text/javascript">
+    function print_report() {
+        var session_start = $('[name="session_start"]').val();
+        var session_end = $('[name="session_end"]').val();
+        var type = $('.tab-pane.active', '.tab-content').attr('id');
+
+        window.open('{{ route('emp.print_report', ['all']) }}?session_start='+session_start+'&session_end='+session_end+'&type='+type, '_tab');
+    }
+</script>
+@endpush

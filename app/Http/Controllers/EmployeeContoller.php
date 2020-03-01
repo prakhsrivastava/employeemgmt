@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Dompdf\Dompdf;
 use Validator;
 use Excel;
 use DB;
@@ -35,6 +36,7 @@ class EmployeeContoller extends Controller
     {
         $empData = \App\Models\Employee::where('id', $id)
             ->with('data')
+            ->with('arriear')
             ->first();
         
         if (empty($empData)) {
@@ -191,6 +193,7 @@ class EmployeeContoller extends Controller
         $tax_report = \App\Models\EmployeeData::where('year', '>=', $session_start)
             ->where('year', '<=', $session_end)
             ->with('employee')
+            ->with('employee.arriear')
             ->get();
         $employees = [
             'gpf' => [],
@@ -213,8 +216,18 @@ class EmployeeContoller extends Controller
         }
         
         $tax_report = [
-            'gpf' => [],
-            'nps' => []
+            'gpf' => [
+                'arriear' => \App\Models\EmployeeArriear::where('session_start', '>=', $session_start)
+                    ->where('session_end', '<=', $session_end)
+                    ->whereIn('employee_id', array_keys($employees['gpf']))
+                    ->get()
+            ],
+            'nps' => [
+                'arriear' => \App\Models\EmployeeArriear::where('session_start', '>=', $session_start)
+                    ->where('session_end', '<=', $session_end)
+                    ->whereIn('employee_id', array_keys($employees['nps']))
+                    ->get()
+            ],            
         ];
         foreach ($data as $key => $taxes) {
             list($month, $year) = explode('/', $key);
@@ -236,6 +249,7 @@ class EmployeeContoller extends Controller
             }
         }
         // dd($employees);
+        // dd($tax_report);
         
         return view('employees.report', compact(
             'tax_report', 
@@ -272,5 +286,128 @@ class EmployeeContoller extends Controller
         }
 
         return redirect(route('emp.edit', [$employee_id]));
+    }
+
+    public function print($id, Request $req) {
+        $dompdf = new Dompdf();
+        $dompdf->set_option('defaultFont', 'Courier');
+        $dompdf->set_option('isHtml5ParserEnabled', true);
+        $html = '<html>
+        <style>
+            .table {
+                table-layout: fixed;
+            }
+            table, th, td {
+                border: 1px solid black;
+                border-collapse: collapse;
+                padding: 5px;
+                width: 100%;
+            }
+        </style>
+        <body>';
+        if ((int)$id) {
+            $empData = \App\Models\Employee::where('id', $id)
+                ->with('data')
+                ->with('arriear')
+                ->first();
+
+            $type = 'gpf';
+            $employee = collect($empData)->only('employee_name');
+            $employee['data'] = collect($empData['data'])->pluck('data')
+                ->map(function ($array, $key) use($empData) {
+                    return collect($array)->merge([
+                        'year' => collect($empData['data'])->pluck('year')[$key],
+                        'month' => collect($empData['data'])->pluck('month')[$key],
+                    ])->toArray();
+                });
+            if ($employee['data']->sum('nps') > 0) {
+                $type = 'nps';
+            }
+            $employee['arriear'] = collect($empData['arriear'])
+                ->reject(function ($arriear) use($empData) {
+                    $data = collect($empData['data']);
+                    if (!($data->contains('year', $arriear['session_start']) 
+                        || $data->contains('year', $arriear['session_end']))) {
+                            return true;
+                    }
+                });
+
+            $html .= view('employees.partials.single_report', [
+                'employee' => $employee,
+                'type' => $type
+            ]);
+        } else {
+            $session_start = $req->session_start;
+            $session_end = $req->session_end;
+            $type = $req->type;
+            $tax_report = \App\Models\EmployeeData::where('year', '>=', $session_start)
+                ->where('year', '<=', $session_end)
+                ->with('employee')
+                ->with('employee.arriear')
+                ->get();
+
+            $employees = array();
+            $data = array();
+            foreach ($tax_report as $report) {
+                if (isset($report->data[$type])) {
+                    $data[$report->month.'/'.$report->year][$type][] = $report->data;
+                    $employees[$type][$report->employee->id] = $report->employee->toArray();
+                    $employees[$type][$report->employee->id]['data'][] = collect($report->data)->merge(
+                        [
+                            'year' => $report->year,
+                            'month' => $report->month,
+                        ]
+                    );
+                }
+            }
+
+            $tax_report = [
+                $type => [
+                    'arriear' => \App\Models\EmployeeArriear::where('session_start', '>=', $session_start)
+                        ->where('session_end', '<=', $session_end)
+                        ->whereIn('employee_id', array_keys($employees[$type]))
+                        ->get(),
+                ],
+            ];
+            foreach ($data as $key => $taxes) {
+                list($month, $year) = explode('/', $key);
+                foreach ($taxes as $key => $value) {
+                    $value = collect($value);
+                    $tax_report[$key][] = array(
+                        'month' => $month,
+                        'year' => $year,
+                        'hra' => $value->sum('hra'),
+                        'total_salary' => $value->sum('total_salary'),
+                        'lic' => $value->sum('lic'),
+                        'it' => $value->sum('it'),
+                        'gr_ins' => $value->sum('gr_ins'),
+                        'gpf' => $value->sum('gpf'),
+                        'gpf_loan' => $value->sum('gpf_loan'),
+                        'nps' => $value->sum('nps'),
+                        'nps_govt_share' => $value->sum('nps_govt_share'),
+                    );
+                }
+            }
+
+            $html .= view('employees.partials.type_table', [
+                'type' => $type,
+                'reports' => $tax_report,
+                'employees' => $employees
+            ]);
+        }
+        $html .= '</body>
+        </html>';
+        $dompdf->loadHtml($html);
+
+        // (Optional) Setup the paper size and orientation
+        $dompdf->setPaper('A4', 'landscape');
+
+        // Render the HTML as PDF
+        $dompdf->render();
+
+        // Output the generated PDF to Browser
+        $dompdf->stream('report.pdf', [
+            'Attachment' => 0
+        ]);
     }
 }

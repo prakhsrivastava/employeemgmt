@@ -22,4 +22,9 @@ class Employee extends Model
     {
         return $this->hasMany(\App\Models\EmployeeData::class, 'employee_id');
     }
+
+    public function arriear()
+    {
+        return $this->hasMany(\App\Models\EmployeeArriear::class, 'employee_id');
+    }
 }

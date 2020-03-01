@@ -153,19 +153,31 @@ aria-hidden="true">
                         </div>
                         <div class="col-sm-4">
                             <div class="form-group">
-                                <label class="form-label">Arriear D.A.</label>
+                                <label class="form-label">Pay</label>
+                                <input type="text" name="pay" class="number form-control" required />
+                            </div>
+                        </div> 
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="form-label">Arriear D.A.(Salary)</label>
                                 <input type="text" name="da" class="price form-control" required />
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-4">
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="form-label">Arriear D.A.(I.T.)</label>
+                                <input type="text" name="da_it" class="price form-control" required />
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
                             <div class="form-group">
                                 <label class="form-label">Other Arriear</label>
                                 <input type="text" name="other" class="price form-control" required value="0" />
                             </div>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-3">
                             <div class="form-group">
                                 <label class="form-label">Bonus</label>
                                 <input type="text" name="bonus" class="price form-control" required value="0" />
@@ -203,6 +215,14 @@ aria-hidden="true">
                     if ($employee['data']->sum('nps') > 0) {
                         $type = 'nps';
                     }
+                    $employee['arriear'] = collect($empData['arriear'])
+                        ->reject(function ($arriear) use($empData) {
+                            $data = collect($empData['data']);
+                            if (!($data->contains('year', $arriear['session_start']) 
+                                || $data->contains('year', $arriear['session_end']))) {
+                                    return true;
+                            }
+                        });
                 ?>
                 @include('employees.partials.single_report', [
                     'employee' => $employee,
@@ -211,13 +231,9 @@ aria-hidden="true">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn form-btn form-grey-btn mr-2" data-dismiss="modal">Cancel</button>
-                <button type="button" class="form-btn btn" id="print">Print</button>
+                <button type="button" class="form-btn btn" id="print" onclick='window.open("{{ route('emp.print_report', [$empData['id']]) }}", "_tab")'>Print</button>
             </div>
         </div>
     </div>
 </div>
 @endsection
-@push('script')
-<script type="text/javascript">
-</script>
-@endpush

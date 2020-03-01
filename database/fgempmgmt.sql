@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 22, 2020 at 04:02 PM
+-- Generation Time: Mar 01, 2020 at 10:26 AM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.1
 
@@ -51,8 +51,10 @@ CREATE TABLE `employee_arriears` (
   `session_start` int(11) NOT NULL,
   `session_end` int(11) NOT NULL,
   `da` decimal(10,0) NOT NULL,
+  `da_it` decimal(10,0) NOT NULL,
   `other` decimal(10,0) NOT NULL,
   `bonus` decimal(10,0) NOT NULL,
+  `pay` varchar(10) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

@@ -11,8 +11,10 @@ class EmployeeArriear extends Model
 
     protected $fillable = [
         'da',
+        'da_it',
         'other',
         'bonus',
+        'pay',
         'session_start',
         'session_end',
         'employee_id',
