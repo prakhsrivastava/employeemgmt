@@ -288,7 +288,7 @@ class EmployeeContoller extends Controller
         return redirect(route('emp.edit', [$employee_id]));
     }
 
-    public function print($id, Request $req) {
+    public function print_report($id, Request $req) {
         $dompdf = new Dompdf();
         $dompdf->set_option('defaultFont', 'Courier');
         $dompdf->set_option('isHtml5ParserEnabled', true);
