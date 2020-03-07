@@ -18,7 +18,8 @@
             @foreach ($employee['data'] as $key => $data)
             <tr>
                 <td>{{ $key + 1 }}</td>
-                <td>{{ $data['month'] }}/{{ $data['year'] }}</td>
+                <td>{{ date('M, y', strtotime($data['year'].'-'.$data['month'].'-01')) }}</td>
+                <td>{{ ($data['month']) }}/{{ $data['year'] }}</td>
                 <td>{{ $data['hra'] }}</td>
                 <td>{{ $data['total_salary'] }}</td>
                 <td>{{ $data['lic'] }}</td>

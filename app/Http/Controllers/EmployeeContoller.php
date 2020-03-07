@@ -415,7 +415,7 @@ class EmployeeContoller extends Controller
 
         // Output the generated PDF to Browser
         $dompdf->stream('report.pdf', [
-            'Attachment' => 0
+            'Attachment' => 1
         ]);
     }
 }
