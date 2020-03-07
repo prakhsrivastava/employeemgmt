@@ -303,8 +303,16 @@ class EmployeeContoller extends Controller
                 padding: 5px;
                 width: 100%;
             }
+            h3, h5 {
+                text-align: center;
+            }
+            h3 {
+                text-decoration: underline;
+            }
         </style>
-        <body>';
+        <body>
+            <h3>FEROZE GANDHI COLLEGE, RAEBARELI</h3>
+            <h5>INCOME SEGMENT - F.Y. ____ - __</h5>';
         if ((int)$id) {
             $empData = \App\Models\Employee::where('id', $id)
                 ->with('data')
